@@ -15,10 +15,10 @@ export default function script(_: typeof tasks) {
   };
 }
 
-// use `isScript` to validate the script should work.
-isScript(script);
-
 if (import.meta.main) {
+  // use `isScript` to validate the script should work.
+  isScript(script);
+
   // we can use `runScript` to check the script works.
   console.log(
     await runScript(script)({ greet: "こんにちは", name: "太郎さん" }),

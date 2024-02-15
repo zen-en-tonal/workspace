@@ -6,7 +6,8 @@ export type Script<C, T, Q> = (api: typeof tasks) => RunArgs<C, T, Q>;
 export async function dispatch<C, T, Q>(
   src: string,
 ): Promise<ReturnType<typeof runner.run<C, T, Q>>> {
-  const script = await import(src) as Script<C, T, Q>;
+  const mod = await import(src);
+  const script = mod.default as Script<C, T, Q>;
   return runScript(script);
 }
 
