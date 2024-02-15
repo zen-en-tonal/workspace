@@ -1,3 +1,5 @@
+import { fn } from "./utils.ts";
+
 export const regexp = (pattern: RegExp, groupKey: string) => ({
   run: (str: string) => {
     const reg = new RegExp(pattern);
@@ -10,10 +12,7 @@ export const regexp = (pattern: RegExp, groupKey: string) => ({
   },
 });
 
-export const replace = (pattern: string, replacement: string) => ({
-  run: (str: string) => Promise.resolve(str.replace(pattern, replacement)),
-});
+export const replace = (pattern: string, replacement: string) =>
+  fn((str: string) => str.replace(pattern, replacement));
 
-export const deserialize = {
-  run: (serialize: string) => Promise.resolve(JSON.parse(serialize)),
-};
+export const deserialize = fn((serialize: string) => JSON.parse(serialize));
