@@ -19,9 +19,9 @@ export function run<C, T, Q>(
   args: RunArgs<C, T, Q>,
 ): (context: C) => Promise<Result<Q>> {
   return async (context: C) => {
-    const task = args.func(context);
-    const arg = args.args(context);
     try {
+      const task = args.func(context);
+      const arg = args.args(context);
       return {
         ok: true,
         value: await task.run(arg),
