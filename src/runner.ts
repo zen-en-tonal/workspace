@@ -6,14 +6,20 @@ export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; message: string; cause?: string };
 
-export function execute<T, Q>(
-  runner: Task<T, Q>,
-): (arg: T) => Promise<Result<Q>> {
-  return async (arg: T) => {
+export type Function<C, T, Q> = (context: C) => Task<T, Q>;
+export type Argument<C, T> = (context: C) => T;
+
+export function runner<C, T, Q>(
+  func: Function<C, T, Q>,
+  args: Argument<C, T>,
+): (context: C) => Promise<Result<Q>> {
+  return async (context: C) => {
+    const task = func(context);
+    const arg = args(context);
     try {
       return {
         ok: true,
-        value: await runner.run(arg),
+        value: await task.run(arg),
       };
     } catch (e) {
       if (e instanceof Error) {
