@@ -1,0 +1,9 @@
+version: '3'
+services:
+  deno:
+    build: .
+    restart: always
+    tty: true
+    volumes:
+      - ../:/workspace
+    working_dir: /workspace
