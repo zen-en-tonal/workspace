@@ -2,7 +2,7 @@ import {
   isScript,
   runScript,
   tasks,
-} from "https://deno.land/x/yagura@v0.0.2/mod.ts";
+} from "https://deno.land/x/yagura@v0.0.3/mod.ts";
 
 type Context = {
   greet: string;
@@ -10,11 +10,9 @@ type Context = {
 };
 
 // the script must be exported as default.
-export default function script(_: typeof tasks) {
+export default function script(t: typeof tasks) {
   return {
-    func: (c: Context) => ({
-      run: (name: string) => Promise.resolve(`${c.greet}! ${name}`),
-    }),
+    func: (c: Context) => t.fn((name: string) => `${c.greet}! ${name}`),
     args: (c: Context) => c.name,
   };
 }
