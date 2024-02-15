@@ -7,15 +7,20 @@ export type Result<T> =
   | { ok: false; message: string; cause?: string };
 
 export type Function<C, T, Q> = (context: C) => Task<T, Q>;
+
 export type Argument<C, T> = (context: C) => T;
 
-export function runner<C, T, Q>(
-  func: Function<C, T, Q>,
-  args: Argument<C, T>,
+export type RunArgs<C, T, Q> = {
+  func: Function<C, T, Q>;
+  args: Argument<C, T>;
+};
+
+export function run<C, T, Q>(
+  args: RunArgs<C, T, Q>,
 ): (context: C) => Promise<Result<Q>> {
   return async (context: C) => {
-    const task = func(context);
-    const arg = args(context);
+    const task = args.func(context);
+    const arg = args.args(context);
     try {
       return {
         ok: true,
