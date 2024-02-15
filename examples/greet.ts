@@ -1,4 +1,8 @@
-import { isScript, runScript, tasks } from "../mod.ts";
+import {
+  isScript,
+  runScript,
+  tasks,
+} from "https://deno.land/x/yagura@v0.0.2/mod.ts";
 
 type Context = {
   greet: string;
