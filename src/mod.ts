@@ -1,2 +1,2 @@
-export * from "./tasks.ts";
-export * from "./runner.ts";
+export * as tasks from "./tasks.ts";
+export * as runner from "./runner.ts";
