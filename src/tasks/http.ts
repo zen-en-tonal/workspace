@@ -1,6 +1,6 @@
-export const request = {
-  run: (url: string) => fetch(url),
-};
+export const request = (init?: RequestInit) => ({
+  run: (url: string) => fetch(url, init),
+});
 
 export const toJson = {
   run: (resp: Response) => resp.json(),
