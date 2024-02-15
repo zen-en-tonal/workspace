@@ -1,4 +1,4 @@
-export const regex = (pattern: string, groupKey: string) => ({
+export const regexp = (pattern: RegExp, groupKey: string) => ({
   run: (str: string) => {
     const reg = new RegExp(pattern);
     const match = reg.exec(str)?.groups?.[groupKey];
