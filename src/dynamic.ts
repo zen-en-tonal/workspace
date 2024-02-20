@@ -1,26 +1,20 @@
-import { runner, tasks } from "./mod.ts";
-import { RunArgs } from "./runner.ts";
+import { Function } from "./runner.ts";
 
-export type Script<C, T, Q> = (api: typeof tasks) => RunArgs<C, T, Q>;
-
-export async function dispatch<C, T, Q>(
+/**
+ * dispatch provides the function where on src.
+ * @param src where the function is placed on remote.
+ * @returns function to run.
+ */
+export async function dispatch<T, Q>(
   src: string,
-): Promise<ReturnType<typeof runner.run<C, T, Q>>> {
+): Promise<Function<T, Q>> {
   const mod = await import(src);
-  const script = mod.default as Script<C, T, Q>;
-  return runScript(script);
-}
-
-export function runScript<C, T, Q>(
-  script: Script<C, T, Q>,
-): ReturnType<typeof runner.run<C, T, Q>> {
-  const args = script(tasks);
-  return runner.run(args);
+  return mod.default as Function<T, Q>;
 }
 
 /**
- * isScript checks what the type of defined script is valid.
- * @param script script to check
+ * isFunction checks what the type of defined function is valid.
+ * @param func to check
  */
 // deno-lint-ignore no-unused-vars
-export const isScript = <C, T, Q>(script: Script<C, T, Q>) => {};
+export const isFunction = <T, Q>(func: Function<T, Q>) => {};
