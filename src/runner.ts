@@ -1,6 +1,9 @@
+import { Logger } from "./deps.ts";
+
 export type Function<T, Q> = (arg: T) => Promise<Q>;
 
 type Meta = { _timestamp: string };
+
 export type Result<T> =
   & (
     | { ok: true; value: T }
@@ -8,29 +11,44 @@ export type Result<T> =
   )
   & Meta;
 
-const timestamp = (now?: number) => new Date(now ?? Date.now()).toISOString();
+export const timestamp = (now?: number) =>
+  new Date(now ?? Date.now()).toISOString();
 
 export function run<T, Q>(
   func: Function<T, Q>,
-  now?: number,
+  config?: {
+    now?: number;
+    logger?: Logger;
+  },
 ): (context: T) => Promise<Result<Q>> {
   return async (context: T) => {
+    const time = timestamp(config?.now);
     try {
       return {
         ok: true,
         value: await func(context),
-        _timestamp: timestamp(now),
+        _timestamp: time,
       };
     } catch (e) {
-      if (e instanceof Error) {
-        return {
-          ok: false,
-          message: e.message,
-          cause: e.cause as string,
-          _timestamp: timestamp(now),
-        };
-      }
-      return { ok: false, message: "unknown", _timestamp: timestamp(now) };
+      const err = errorResp<Q>(e, time);
+      config?.logger?.error(Object.assign(err, { stack: e }));
+      return err;
     }
   };
 }
+
+const errorResp = <T>(e: unknown, timestamp: string): Result<T> => {
+  if (e instanceof Error) {
+    return {
+      ok: false,
+      message: e.message,
+      cause: e.cause as string,
+      _timestamp: timestamp,
+    };
+  }
+  return {
+    ok: false,
+    message: "unknown",
+    _timestamp: timestamp,
+  };
+};

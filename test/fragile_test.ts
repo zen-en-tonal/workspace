@@ -5,7 +5,7 @@ Deno.test("fragile func", async () => {
   const fragile_func = () => {
     throw new Error("error");
   };
-  const res = await run(fragile_func, 1708087637000)(null);
+  const res = await run(fragile_func, { now: 1708087637000 })(null);
   assertEquals(res, {
     ok: false,
     message: "error",
